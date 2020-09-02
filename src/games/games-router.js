@@ -8,5 +8,10 @@ GamesRouter
         let allGames = GamesService.getAllGames();
         res.json(allGames);
     })
+    .post('/', (req, res) => {
+        const { creatorName } = req.body;
+        let game = GamesService.createGame(creatorName);
+        res.status(201).json(game);
+    });
 
 module.exports = GamesRouter;

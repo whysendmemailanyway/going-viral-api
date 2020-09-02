@@ -15,6 +15,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use("/api/games", GamesRouter);
+app.use("/api/debug", DebugRouter);
 
 app.get("/", (req, res, next) => {
     res.send(`Hi, this is the API! Please check the documentation for more information.`);

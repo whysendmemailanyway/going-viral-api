@@ -1,0 +1,10 @@
+client calls the API server to get information about ICE servers and channel
+server and client both perform these steps individually:
+    create an RTCPeerConnection using that information
+    create ice candidate handlers
+client adds microphone track to output
+server adds client input to output
+client creates offer and sends it via websockets
+
+the implementation is so open it's kind of hard to keep track of!
+
