@@ -1,4 +1,4 @@
-let calls = [];
+let calls = {};
 
 const iceConfiguration = {
     iceServers: [
@@ -47,7 +47,22 @@ const DebugService = {
     createCall(creatorName) {
         let channelId = generateChannelId(creatorName);
         console.log(`Starting call on channel ${channelId}`);
-        
+        let myPeerConnection = new RTCPeerConnection(iceConfiguration);
+        myPeerConnection.createOffer().then(function (offer) {
+            return myPeerConnection.setLocalDescription(offer);
+        })
+            .then(function () {
+                sendToServer({
+                    name: `{([<THE SERVER>])}`,
+                    target: creatorName,
+                    type: "audio-offer",
+                    sdp: myPeerConnection.localDescription
+                });
+            })
+            .catch(function (reason) {
+                // An error occurred, so handle the failure to connect
+            });
+        return iceConfiguration;
     }
 }
 

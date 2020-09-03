@@ -8,3 +8,18 @@ client creates offer and sends it via websockets
 
 the implementation is so open it's kind of hard to keep track of!
 
+DO I EVEN NEED RTC?! I could probably accomplish what I want with pure websockets: https://blog.logrocket.com/online-radio-server-pure-node-js/
+
+RTC is for peer to peer, but here I'm doing client to server and vice versa, so...
+
+the new process would be:
+server: whenever a new client connects to the game, a client object is created for them with their writable and their readable.
+the readables are read as fast as possible; the writeables are written to at a speed that makes the audio sound normal.
+// initialize a new chunk
+// iterate over each client1:
+    // iterate over each client2:
+        // if client1 !== client2 and they are in the same room:
+            // combine client2's readable into the current chunk
+    //  write chunk to client1
+
+https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createChannelMerger
