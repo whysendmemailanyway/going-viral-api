@@ -1,3 +1,7 @@
+const { TURN_PORT, TURN_ADDRESS } = require('../config');
+
+const SocketsService = require('../sockets/sockets-service');
+
 let calls = {};
 
 const iceConfiguration = {
@@ -47,22 +51,52 @@ const DebugService = {
     createCall(creatorName) {
         let channelId = generateChannelId(creatorName);
         console.log(`Starting call on channel ${channelId}`);
-        let myPeerConnection = new RTCPeerConnection(iceConfiguration);
-        myPeerConnection.createOffer().then(function (offer) {
-            return myPeerConnection.setLocalDescription(offer);
-        })
-            .then(function () {
-                sendToServer({
-                    name: `{([<THE SERVER>])}`,
-                    target: creatorName,
-                    type: "audio-offer",
-                    sdp: myPeerConnection.localDescription
-                });
+        let peerConnection = new RTCPeerConnection(iceConfiguration);
+        // Exchange RTC session descriptions
+        SocketsService.addListener('call', (socket, data) => {
+            peerConnection.createOffer().then((offer) => {
+                console.log("Created offer");
+                myPeerConnection.setLocalDescription(offer)
+                .then(() => {
+                    console.log("Set local description to new offer.");
+                    SocketsService.send(socket, 'offer', {offer, configuration: iceConfiguration});
+                })
             })
-            .catch(function (reason) {
-                // An error occurred, so handle the failure to connect
-            });
-        return iceConfiguration;
+        });
+
+        SocketsService.addListener('answer', (socket, data) => {
+            peerConnection.setRemoteDescription(new RTCSessionDescription(data.rtcSessionDescription));
+        })
+
+        // Listen for remote ICE candidates and add them to the local RTCPeerConnection
+        SocketsService.addEventListener('new-ice-candidate', data => {
+            if (data.iceCandidate) {
+                try {
+                    peerConnection.addIceCandidate(data.iceCandidate)
+                    .then(() => {
+                        console.log("Added ice candidate!");
+                    });
+                } catch (e) {
+                    console.error('Error adding received ice candidate', e);
+                }
+            }
+        });
+
+        // Listen for connectionstatechange on the local RTCPeerConnection
+        peerConnection.addEventListener('connectionstatechange', event => {
+            if (peerConnection.connectionState === 'connected') {
+                console.log("Peers connected!");
+                const remoteStream = MediaStream();
+                peerConnection.addEventListener('track', (event) => {
+                    remoteStream.addTrack(event.track, remoteStream);
+                });
+                console.log(peerConnection);
+                console.log(peerConnection.getReceivers());
+                peerConnection.getReceivers().forEach(receiver => {
+                    peerConnection.addTrack(receiver.track, localStream);
+                });
+            }
+        });
     }
 }
 

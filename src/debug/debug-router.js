@@ -8,7 +8,8 @@ DebugRouter
         res.send('what do you want from me');
     })
     .post('/', (req, res) => {
-        res.send(DebugService.createCall(req.body.name));
+        DebugService.createCall(req.body.playerName)
+        res.send("Initiating call...");
     });
 
 module.exports = DebugRouter;

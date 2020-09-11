@@ -4,7 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require('./config');
 const GamesRouter = require('./games/games-router');
-//const DebugRouter = require('./debug/debug-router');
+const DebugRouter = require('./debug/debug-router');
 
 const app = express();
 app.use(express.json());
@@ -16,7 +16,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use("/api/games", GamesRouter);
-//app.use("/api/debug", DebugRouter);
+app.use("/api/debug", DebugRouter);
 
 app.get("/", (req, res, next) => {
     res.send(`Hi, this is the API! Please check the documentation for more information.`);
