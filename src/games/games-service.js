@@ -1,6 +1,6 @@
 const Game = require("./game-instance");
 
-let games = [];
+let games = {};
 const generateGameId = (creatorName) => {
     return `${creatorName}-${Date.now()}`
 };
@@ -16,10 +16,14 @@ const GamesService = {
         return games.map(serializeGame);
     },
     createGame(creatorName) {
-        let newGame = new Game(generateGameId(creatorName));
-        newGame.addPlayer(creatorName);
-        games.push(newGame);
-        return serializeGame(newGame);
+        let id = generateGameId(creatorName);
+        let game = new Game(id);
+        game.addPlayer(creatorName);
+        games[id] = game;
+        return serializeGame(game);
+    },
+    joinGame(gameId, playerName) {
+        games[gameId].addPlayer(playerName);
     }
 }
 

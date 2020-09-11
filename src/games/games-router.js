@@ -12,6 +12,16 @@ GamesRouter
         const { creatorName } = req.body;
         let game = GamesService.createGame(creatorName);
         res.status(201).json(game);
+    })
+    .post('/:gameId', (req, res) => {
+        const { gameId } = req.params;
+        const { playerName } = req.body;
+        try {
+            let game = GamesService.joinGame(gameId, playerName);
+            res.status(200).json(game);
+        } catch (e) {
+            res.status(500).json(e);
+        }
     });
 
 module.exports = GamesRouter;

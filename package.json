@@ -24,6 +24,7 @@
     "helmet": "^4.1.0",
     "morgan": "^1.10.0",
     "node-turn": "0.0.4",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0"
   }
 }
