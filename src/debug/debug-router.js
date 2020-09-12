@@ -9,7 +9,10 @@ DebugRouter
     })
     .post('/', (req, res) => {
         DebugService.createCall(req.body.playerName)
-        res.send("Initiating call...");
-    });
+        res.send(DebugService.iceConfiguration);
+    })
+    // .get('/get-ice-configuration', (req, res) => {
+    //     res.status(200).json(DebugService.iceConfiguration);
+    // });
 
 module.exports = DebugRouter;

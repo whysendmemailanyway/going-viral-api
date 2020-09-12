@@ -7,3 +7,9 @@ So each game will have multiple Rooms. Each Room will hold multiple users. Users
 Sometimes RTC is slow to intialize, though... is a 5 second transition between rooms enough? is that too slow to feel fun?
 
 I'm hesitant to put the room-based muting on the client side. It'd be too easy to hack and give yourself global ears. But... maybe that's the best route for now...
+
+FFS. WHAT IS THIS?!?!?!
+https://github.com/muaz-khan/RTCMultiConnection-Server
+https://github.com/muaz-khan/RTCMultiConnection
+
+It might be everything I need. WOW. Will have to try later.

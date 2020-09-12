@@ -3,7 +3,6 @@ const app = require('./app');
 const { PORT, TURN_ADDRESS } = require('./config');
 const SocketsService = require('./sockets/sockets-service');
 const Turn = require('node-turn');
-const io = require('socket.io');
 
 const turnServer = new Turn({
   authMech: 'none',
@@ -21,7 +20,9 @@ const server = app.listen(PORT, () => {
 
 console.log(`Opening sockets...`);
 
-io(server).on('connection', SocketsService.ioOnHandler);
+//io(server).on('connection', SocketsService.ioOnHandler);
+const io = require('socket.io')(server);
+SocketsService.initialize(io);
 
 const exitCallback = (code) => {
     console.log(`About to exit with code: ${code}`);
